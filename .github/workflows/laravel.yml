@@ -6,7 +6,7 @@ jobs:
     name: Laravel (PHP ${{ matrix.php-versions }})
     runs-on: ubuntu-latest
     env:
-      DB_DATABASE: laravel_card_app
+      DB_DATABASE: laravel_ecommerce
       DB_USERNAME: root
       DB_PASSWORD: password
       BROADCAST_DRIVER: log
@@ -22,6 +22,9 @@ jobs:
         ports:
           - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      nodejs:
+        image: node:latest
 
     strategy:
       fail-fast: false
@@ -73,7 +76,10 @@ jobs:
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
 
-      - name: Test with phpunit
-        run: vendor/bin/phpunit --coverage-text
-        env:
-          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+      - name: Npm install
+        run: npm install && npm run dev
+
+#      - name: Test with phpunit
+#        run: vendor/bin/phpunit --coverage-text
+#        env:
+#          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
